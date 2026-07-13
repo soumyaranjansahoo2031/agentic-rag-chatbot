@@ -15,7 +15,7 @@ def get_youtube_transcript(youtube_url: str) -> dict:
     logger.info("...")
 
     yt = YouTube(youtube_url)
-    
+    logger.info("Checkpoint : YouTube object created")
     available_captions = list(yt.captions)
     logger.info("captions")
     logger.info(available_captions)
