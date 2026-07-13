@@ -12,10 +12,12 @@ def get_youtube_transcript(youtube_url: str) -> dict:
     logger.info("Video url: %s", youtube_url)
     # print("extracting...")
     logger.info("Attempting to captions")
-    
+
     yt = YouTube(youtube_url)
     
     available_captions = list(yt.captions)
+    logger.info("captions")
+    logger.info(available_captions)
 
     print(
         "AVAILABLE CAPTIONS:",
