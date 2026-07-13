@@ -12,6 +12,7 @@ def get_youtube_transcript(youtube_url: str) -> dict:
     logger.info("Video url: %s", youtube_url)
     # print("extracting...")
     logger.info("Attempting to captions")
+    logger.info("...")
 
     yt = YouTube(youtube_url)
     
