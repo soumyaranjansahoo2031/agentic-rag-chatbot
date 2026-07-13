@@ -2,11 +2,19 @@ from urllib.parse import parse_qs, urlparse
 
 from pytubefix import YouTube
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def get_youtube_transcript(youtube_url: str) -> dict:
-    print("extracting...")
+    logger.info("YouTube loader started")
+    logger.info("Video url: %s", youtube_url)
+    # print("extracting...")
+    logger.info("Attempting to captions")
+    
     yt = YouTube(youtube_url)
-
+    
     available_captions = list(yt.captions)
 
     print(
