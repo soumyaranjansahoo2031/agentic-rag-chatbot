@@ -1,25 +1,51 @@
 from urllib.parse import parse_qs, urlparse
 
-# change
-from pytubefix import YouTube 
+from pytubefix import YouTube
 
-# from youtube_transcript_api import YouTubeTranscriptApi
 
 def get_youtube_transcript(youtube_url: str) -> dict:
-    """
-    Fetch English captions from a YouTube video using pytubefix.
-    """
-
     yt = YouTube(youtube_url)
 
-    caption = (
-        yt.captions.get_by_language_code("en")
-        or yt.captions.get_by_language_code("a.en")
+    available_captions = list(yt.captions)
+
+    print(
+        "AVAILABLE CAPTIONS:",
+        [(caption.code, caption.name) for caption in available_captions],
     )
 
-    if caption is None:
+    if not available_captions:
         raise ValueError(
-            "No English or auto-generated English captions were found."
+            "No caption tracks were returned by YouTube. "
+            "The Streamlit Cloud IP may be blocked."
+        )
+
+    caption = None
+
+    # Prefer any English caption, including auto-generated variants.
+    for item in available_captions:
+        code = item.code.lower()
+
+        if code == "en" or code == "a.en":
+            caption = item
+            break
+
+    # Then accept other English variants such as en-US or a.en-US.
+    if caption is None:
+        for item in available_captions:
+            code = item.code.lower()
+
+            if code.startswith("en") or code.startswith("a.en"):
+                caption = item
+                break
+
+    if caption is None:
+        available_codes = [
+            item.code for item in available_captions
+        ]
+
+        raise ValueError(
+            "No English caption track was found. "
+            f"Available captions: {available_codes}"
         )
 
     transcript_text = caption.generate_srt_captions()
@@ -31,6 +57,9 @@ def get_youtube_transcript(youtube_url: str) -> dict:
         "title": yt.title,
         "author": yt.author,
     }
+
+# from youtube_transcript_api import YouTubeTranscriptApi
+
 # def extract_youtube_video_id(youtube_url: str) -> str:
 #     if not youtube_url or not youtube_url.strip():
 #         raise ValueError("YouTube URL is required.")
