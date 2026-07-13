@@ -12,6 +12,15 @@ from langgraph_backend_rag_yt import (
     thread_document_metadata,
 )
 
+import logging
+import traceback
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+)
+
+logger = logging.getLogger("streamlit_frontend")
 
 # =========================================================
 # Utilities
@@ -304,6 +313,7 @@ if process_youtube:
                 expanded=True,
             ) as status_box:
                 # st.sidebar.status("ingesting youtube video url...")
+                logger.info("Calling backend YouTube ingestion function")
                 summary = ingest_youtube(
                     youtube_url=youtube_url.strip(),
                     thread_id=thread_key,
