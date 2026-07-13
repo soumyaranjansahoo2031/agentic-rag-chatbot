@@ -4,6 +4,7 @@ from pytubefix import YouTube
 
 
 def get_youtube_transcript(youtube_url: str) -> dict:
+    print("extracting...")
     yt = YouTube(youtube_url)
 
     available_captions = list(yt.captions)

@@ -303,7 +303,7 @@ if process_youtube:
                 "Processing YouTube video...",
                 expanded=True,
             ) as status_box:
-                st.sidebar.status("ingesting youtube video url...")
+                # st.sidebar.status("ingesting youtube video url...")
                 summary = ingest_youtube(
                     youtube_url=youtube_url.strip(),
                     thread_id=thread_key,
