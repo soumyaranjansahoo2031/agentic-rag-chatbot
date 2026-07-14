@@ -38,6 +38,8 @@ from langchain_huggingface import HuggingFaceEmbeddings
 
 from youtube_loader import get_youtube_transcript
 
+from functools import lru_cache
+
 
 load_dotenv()
 
@@ -62,7 +64,21 @@ llm = ChatGroq(
     temperature=0.7, 
     max_tokens=1000
     )
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+# embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+
+@lru_cache(maxsize=1)
+def get_embeddings() -> HuggingFaceEmbeddings:
+    # print("[EMBEDDINGS] Loading embedding model...", flush=True)
+
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2",
+        model_kwargs={"device": "cpu"},
+        encode_kwargs={"normalize_embeddings": True},
+    )
+
+    # print("[EMBEDDINGS] Model loaded successfully", flush=True)
+
+    return embeddings
 
 # llm = ChatGoogleGenerativeAI(
 #     model="gemini-3.5-flash", 
@@ -103,7 +119,7 @@ def ingest_pdf(file_bytes: bytes, thread_id: str, filename: Optional[str] = None
         )
         chunks = splitter.split_documents(docs)
 
-        vector_store = FAISS.from_documents(chunks, embeddings)
+        vector_store = FAISS.from_documents(chunks, get_embeddings)
         retriever = vector_store.as_retriever(
             search_type="similarity", search_kwargs={"k": 4}
         )
@@ -152,7 +168,7 @@ def ingest_youtube(
 
     vector_store = FAISS.from_documents(
         chunks,
-        embeddings,
+        get_embeddings,
     )
 
     retriever = vector_store.as_retriever(
