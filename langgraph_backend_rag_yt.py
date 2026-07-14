@@ -119,7 +119,7 @@ def ingest_pdf(file_bytes: bytes, thread_id: str, filename: Optional[str] = None
         )
         chunks = splitter.split_documents(docs)
 
-        vector_store = FAISS.from_documents(chunks, get_embeddings)
+        vector_store = FAISS.from_documents(chunks, get_embeddings())
         retriever = vector_store.as_retriever(
             search_type="similarity", search_kwargs={"k": 4}
         )
@@ -168,7 +168,7 @@ def ingest_youtube(
 
     vector_store = FAISS.from_documents(
         chunks,
-        get_embeddings,
+        get_embeddings(),
     )
 
     retriever = vector_store.as_retriever(
