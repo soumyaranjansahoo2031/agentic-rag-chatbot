@@ -40,7 +40,7 @@ from youtube_loader import get_youtube_transcript
 
 from functools import lru_cache
 
-import streamlit as st
+# import streamlit as st
 
 
 load_dotenv()
@@ -68,7 +68,7 @@ llm = ChatGroq(
     )
 # embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
-@st.cache_resource(show_spinner="Loading embedding model...")
+@lru_cache(maxsize=1)
 def get_embeddings() -> HuggingFaceEmbeddings:
     # print("[EMBEDDINGS] Loading embedding model...", flush=True)
 
