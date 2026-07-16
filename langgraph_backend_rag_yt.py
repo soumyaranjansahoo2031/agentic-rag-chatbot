@@ -66,7 +66,7 @@ llm = ChatGroq(
     )
 # embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
-@lru_cache(maxsize=1)
+@st.cache_resource(show_spinner="Loading embedding model...")
 def get_embeddings() -> HuggingFaceEmbeddings:
     # print("[EMBEDDINGS] Loading embedding model...", flush=True)
 
