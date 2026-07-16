@@ -40,6 +40,8 @@ from youtube_loader import get_youtube_transcript
 
 from functools import lru_cache
 
+import streamlit as st
+
 
 load_dotenv()
 
